@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const CreateAgent = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ const CreateAgent = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !password) {
+    if (!name || !username || !password) {
       toast({
         variant: "destructive",
         title: "Validation Error",
@@ -54,7 +54,7 @@ const CreateAgent = () => {
         throw new Error("You must be logged in to create an agent");
       }
       
-      await register(email, password, name, "agent", userData.uid);
+      await register(username, password, name, "agent", userData.uid);
       
       toast({
         title: "Agent Created",
@@ -99,13 +99,13 @@ const CreateAgent = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="agent@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="agent1"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>

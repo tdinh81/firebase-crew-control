@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const CreatePlayer = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ const CreatePlayer = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !password) {
+    if (!name || !username || !password) {
       toast({
         variant: "destructive",
         title: "Validation Error",
@@ -54,7 +54,7 @@ const CreatePlayer = () => {
         throw new Error("You must be logged in to create a player");
       }
       
-      await register(email, password, name, "player", userData.uid);
+      await register(username, password, name, "player", userData.uid);
       
       toast({
         title: "Player Created",
@@ -99,13 +99,13 @@ const CreatePlayer = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="player@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="player1"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>

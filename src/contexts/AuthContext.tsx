@@ -16,7 +16,7 @@ type UserRole = "masterAdmin" | "agent" | "player" | null;
 
 interface UserData {
   uid: string;
-  email: string | null;
+  username: string;
   displayName: string | null;
   role: UserRole;
   isActive: boolean;
@@ -26,8 +26,8 @@ interface UserData {
 interface AuthContextType {
   currentUser: User | null;
   userData: UserData | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, role: UserRole, createdBy?: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
+  register: (username: string, password: string, name: string, role: UserRole, createdBy?: string) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
@@ -84,9 +84,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return unsubscribe;
   }, []);
 
-  async function register(email: string, password: string, name: string, role: UserRole, createdBy?: string) {
+  async function register(username: string, password: string, name: string, role: UserRole, createdBy?: string) {
     try {
       setLoading(true);
+      // For Firebase auth, we'll create an email using the username
+      // This is necessary because Firebase requires email format
+      const email = `${username}@crewcontrol.com`;
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
@@ -97,7 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Create user document in Firestore
       const userData: UserData = {
         uid: user.uid,
-        email: user.email,
+        username: username,
         displayName: name,
         role: role,
         isActive: true,
@@ -125,9 +129,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function login(email: string, password: string) {
+  async function login(username: string, password: string) {
     try {
       setLoading(true);
+      // Convert username to email format for Firebase auth
+      const email = `${username}@crewcontrol.com`;
       await signInWithEmailAndPassword(auth, email, password);
       toast({
         title: "Login successful",
